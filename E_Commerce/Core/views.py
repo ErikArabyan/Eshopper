@@ -1,0 +1,39 @@
+from typing import Any
+from django.http import HttpRequest, HttpResponse, JsonResponse
+from django.shortcuts import render
+from django.views.generic import ListView,DetailView
+from .models import *
+from django.db.models import Count
+from django.core.serializers import serialize
+
+
+class HomeListView(ListView):
+    template_name = 'index.html'
+    def get_context_data(self):
+        context = {}
+        context['contact'] = Contact.objects.get()
+        context['carousel'] = Carousel.objects.all()
+        context['category'] = Category.objects.annotate(brand_count=Count('subcategory')).order_by('-brand_count', '-name')
+        context['category1'] = context['category'].filter(brand_count=0)
+        context['brands'] = Brands.objects.all()
+        context['products'] = Product.objects.annotate(total=Count('brand'))
+        context['circle'] = Circle.objects.all()
+        return context
+
+    def get(self, request):
+        context = self.get_context_data()
+
+        if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+            price_min = request.GET.get('price_range_min')
+            price_max = request.GET.get('price_range_max')
+            products = Product.objects.filter(price__gte=price_min, price__lte=price_max)
+                # product['fields'].img_url = product.img.url
+            products_json = serialize('json', products)
+            return JsonResponse(products_json, safe=False)
+        return render(request, self.template_name, context)
+
+    def post(self, request):
+        query = request.POST.get('query', '')
+        context = self.get_context_data()
+        context['products'] = Product.objects.filter(name__icontains=query).order_by('?')
+        return render(request, self.template_name, context)
