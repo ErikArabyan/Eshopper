@@ -111,8 +111,6 @@
 				this.value[1] = this.min;
 			}
 		}
-		console.log(this.range);
-		
 		this.diff = this.max - this.min;
 		this.percentage = [
 			(this.value[0]-this.min)*100/this.diff,

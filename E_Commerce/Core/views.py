@@ -16,12 +16,18 @@ class HomeListView(ListView):
         context['category'] = Category.objects.annotate(brand_count=Count('subcategory')).order_by('-brand_count', '-name')
         context['category1'] = context['category'].filter(brand_count=0)
         context['brands'] = Brands.objects.all()
-        context['products'] = Product.objects.annotate(total=Count('brand'))
+        context['products'] = Product.objects.all().order_by('category')
+        context['products1'] = Product.objects.all().values('category__name').annotate(Count('category__name'))
+        # .annotate(total = Count('brand'))
         context['circle'] = Circle.objects.all()
         return context
 
     def get(self, request):
         context = self.get_context_data()
+        if request.headers.get('x-requested-with') == 'XMLHttpRequest' and 'productid' in request.GET:
+            if request.user.is_authenticated:
+                user = CustomUser.objects.get_or_create(user_ptr_id=request.user.id)
+                user.userproducts.add(int(request.GET.get('productid')))
 
         if request.headers.get('x-requested-with') == 'XMLHttpRequest':
             price_min = request.GET.get('price_range_min')
@@ -36,4 +42,20 @@ class HomeListView(ListView):
         query = request.POST.get('query', '')
         context = self.get_context_data()
         context['products'] = Product.objects.filter(name__icontains=query).order_by('?')
+        return render(request, self.template_name, context)
+    
+class CartListView(ListView):
+    template_name = 'cart.html'
+    def get_context_data(self):
+        context = {}
+        context['contact'] = Contact.objects.get()
+        context['carousel'] = Carousel.objects.all()
+        context['category'] = Category.objects.annotate(brand_count=Count('subcategory')).order_by('-brand_count', '-name')
+        context['category1'] = context['category'].filter(brand_count=0)
+        context['brands'] = Brands.objects.all()
+        context['products'] = Product.objects.annotate(total=Count('brand'))
+        context['circle'] = Circle.objects.all()
+        return context
+    def get(self, request):
+        context = self.get_context_data()
         return render(request, self.template_name, context)

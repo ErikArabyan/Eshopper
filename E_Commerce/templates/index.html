@@ -81,8 +81,8 @@
 							<h2>Brands</h2>
 							<div class="brands-name">
 								<ul class="nav nav-pills nav-stacked">
-									{% for i in products %}
-									<li><a href="#"> <span class="pull-right">({{ i.total }})</span>{{ i.brand }}</a></li>
+									{% for i in products1 %}
+									<li><a href="#"> <span class="pull-right">({{ i.category__name__count }})</span>{{ i.category__name }}</a></li>
 									{% endfor %}
 								</ul>
 							</div>
@@ -118,19 +118,12 @@
 						<div class="col-sm-4" >
 							<div class="product-image-wrapper">
 								<div class="single-products">
-										<div class="productinfo text-center">
-											<img src="{{ i.img.url }}" alt="" />
-											<h2>${{ i.price }}</h2>
-											<p>{{ i.name }}</p>
-											<a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
-										</div>
-										<div class="product-overlay">
-											<div class="overlay-content">
-												<h2>${{ i.price }}</h2>
-												<p>{{ i.name }}</p>
-												<a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
-											</div>
-										</div>
+									<div class="productinfo text-center">
+										<img src="{{ i.img.url }}" alt="" />
+										<h2>${{ i.price }}</h2>
+										<p>{{ i.name }}</p>
+										<a class="btn btn-default add-to-cart" productid = {{ i.id }}><i class="fa fa-shopping-cart"></i>Add to cart</a>
+									</div>
 								</div>
 								<div class="choose">
 									<ul class="nav nav-pills nav-justified">
@@ -143,254 +136,35 @@
 						{% endfor %}
 					</div><!--features_items-->
 					
-					<div class="category-tab" id="add_feature_before" style="width: 100%;"><!--category-tab-->
-						<div class="col-sm-12">
-							<ul class="nav nav-tabs">
-								{% for i in category1 %}
-								<li {% if forloop.first %}class="active"{% endif %}><a href="#{{ i.name }}" data-toggle="tab">{{ i.name }}</a></li>
-								{% endfor %}
-							</ul>
+		<div class="category-tab"><!--category-tab-->
+			<div class="col-sm-12">
+				<ul class="nav nav-tabs">
+					{% for i in category %}
+					<li {% if forloop.first %}class="active"{% endif %}><a href="#{{ i.name }}" data-toggle="tab">{{ i.name }}</a></li>
+					{% endfor %}
+				</ul>
+				</div>
+					<div class="tab-content">
+						{% for j in products %}
+						{% ifchanged j.category %}
+						{% if not forloop.first %}
 						</div>
-						<div class="tab-content">
-							{% for i in products|slice:":4" %}
-							<div class="tab-pane fade active in" id="{{ i.category }}" >
-								<div class="col-sm-3">
-									<div class="product-image-wrapper">
-										<div class="single-products">
-											<div class="productinfo text-center">
-												<img src="{{ i.img.url }}" alt="" />
-												<h2>${{ i.price }}</h2>
-												<p>{{ i.name }}</p>
-												<a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
-											</div>
-											
-										</div>
-									</div>
-								</div>
-
-							</div>
-							{% endfor %}
-							<div class="tab-pane fade" id="blazers" >
-								<div class="col-sm-3">
-									<div class="product-image-wrapper">
-										<div class="single-products">
-											<div class="productinfo text-center">
-												<!-- <img src="images/home/gallery4.jpg" alt="" /> -->
-												<h2>$56</h2>
-												<p>Easy Polo Black Edition</p>
-												<a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
-											</div>
-											
-										</div>
-									</div>
-								</div>
-								<div class="col-sm-3">
-									<div class="product-image-wrapper">
-										<div class="single-products">
-											<div class="productinfo text-center">
-												<!-- <img src="images/home/gallery3.jpg" alt="" /> -->
-												<h2>$56</h2>
-												<p>Easy Polo Black Edition</p>
-												<a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
-											</div>
-											
-										</div>
-									</div>
-								</div>
-								<div class="col-sm-3">
-									<div class="product-image-wrapper">
-										<div class="single-products">
-											<div class="productinfo text-center">
-												<!-- <img src="images/home/gallery2.jpg" alt="" /> -->
-												<h2>$56</h2>
-												<p>Easy Polo Black Edition</p>
-												<a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
-											</div>
-											
-										</div>
-									</div>
-								</div>
-								<div class="col-sm-3">
-									<div class="product-image-wrapper">
-										<div class="single-products">
-											<div class="productinfo text-center">
-												<!-- <img src="images/home/gallery1.jpg" alt="" /> -->
-												<h2>$56</h2>
-												<p>Easy Polo Black Edition</p>
-												<a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
-											</div>
-											
+						{% endif %}
+						<div class="tab-pane fade active in" id="{{ j.category }}">
+						{% endifchanged %} 
+							<div class="col-sm-3">
+								<div class="product-image-wrapper">
+									<div class="single-products">
+										<div class="productinfo text-center">
+											<img src="{{ j.img.url }}" alt="">
+											<h2>${{ j.price }}</h2>
+											<p>{{ j.name }}</p>
+											<a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
 										</div>
 									</div>
 								</div>
 							</div>
-							
-							<div class="tab-pane fade" id="sunglass" >
-								<div class="col-sm-3">
-									<div class="product-image-wrapper">
-										<div class="single-products">
-											<div class="productinfo text-center">
-												<!-- <img src="images/home/gallery3.jpg" alt="" /> -->
-												<h2>$56</h2>
-												<p>Easy Polo Black Edition</p>
-												<a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
-											</div>
-											
-										</div>
-									</div>
-								</div>
-								<div class="col-sm-3">
-									<div class="product-image-wrapper">
-										<div class="single-products">
-											<div class="productinfo text-center">
-												<!-- <img src="images/home/gallery4.jpg" alt="" /> -->
-												<h2>$56</h2>
-												<p>Easy Polo Black Edition</p>
-												<a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
-											</div>
-											
-										</div>
-									</div>
-								</div>
-								<div class="col-sm-3">
-									<div class="product-image-wrapper">
-										<div class="single-products">
-											<div class="productinfo text-center">
-												<!-- <img src="images/home/gallery1.jpg" alt="" /> -->
-												<h2>$56</h2>
-												<p>Easy Polo Black Edition</p>
-												<a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
-											</div>
-											
-										</div>
-									</div>
-								</div>
-								<div class="col-sm-3">
-									<div class="product-image-wrapper">
-										<div class="single-products">
-											<div class="productinfo text-center">
-												<!-- <img src="images/home/gallery2.jpg" alt="" /> -->
-												<h2>$56</h2>
-												<p>Easy Polo Black Edition</p>
-												<a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
-											</div>
-											
-										</div>
-									</div>
-								</div>
-							</div>
-							
-							<div class="tab-pane fade" id="kids" >
-								<div class="col-sm-3">
-									<div class="product-image-wrapper">
-										<div class="single-products">
-											<div class="productinfo text-center">
-												<!-- <img src="images/home/gallery1.jpg" alt="" /> -->
-												<h2>$56</h2>
-												<p>Easy Polo Black Edition</p>
-												<a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
-											</div>
-											
-										</div>
-									</div>
-								</div>
-								<div class="col-sm-3">
-									<div class="product-image-wrapper">
-										<div class="single-products">
-											<div class="productinfo text-center">
-												<!-- <img src="images/home/gallery2.jpg" alt="" /> -->
-												<h2>$56</h2>
-												<p>Easy Polo Black Edition</p>
-												<a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
-											</div>
-											
-										</div>
-									</div>
-								</div>
-								<div class="col-sm-3">
-									<div class="product-image-wrapper">
-										<div class="single-products">
-											<div class="productinfo text-center">
-												<!-- <img src="images/home/gallery3.jpg" alt="" /> -->
-												<h2>$56</h2>
-												<p>Easy Polo Black Edition</p>
-												<a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
-											</div>
-											
-										</div>
-									</div>
-								</div>
-								<div class="col-sm-3">
-									<div class="product-image-wrapper">
-										<div class="single-products">
-											<div class="productinfo text-center">
-												<!-- <img src="images/home/gallery4.jpg" alt="" /> -->
-												<h2>$56</h2>
-												<p>Easy Polo Black Edition</p>
-												<a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
-											</div>
-											
-										</div>
-									</div>
-								</div>
-							</div>
-							
-							<div class="tab-pane fade" id="poloshirt" >
-								<div class="col-sm-3">
-									<div class="product-image-wrapper">
-										<div class="single-products">
-											<div class="productinfo text-center">
-												<!-- <img src="images/home/gallery2.jpg" alt="" /> -->
-												<h2>$56</h2>
-												<p>Easy Polo Black Edition</p>
-												<a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
-											</div>
-											
-										</div>
-									</div>
-								</div>
-								<div class="col-sm-3">
-									<div class="product-image-wrapper">
-										<div class="single-products">
-											<div class="productinfo text-center">
-												<!-- <img src="images/home/gallery4.jpg" alt="" /> -->
-												<h2>$56</h2>
-												<p>Easy Polo Black Edition</p>
-												<a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
-											</div>
-											
-										</div>
-									</div>
-								</div>
-								<div class="col-sm-3">
-									<div class="product-image-wrapper">
-										<div class="single-products">
-											<div class="productinfo text-center">
-												<!-- <img src="images/home/gallery3.jpg" alt="" /> -->
-												<h2>$56</h2>
-												<p>Easy Polo Black Edition</p>
-												<a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
-											</div>
-											
-										</div>
-									</div>
-								</div>
-								<div class="col-sm-3">
-									<div class="product-image-wrapper">
-										<div class="single-products">
-											<div class="productinfo text-center">
-												<!-- <img src="images/home/gallery1.jpg" alt="" /> -->
-												<h2>$56</h2>
-												<p>Easy Polo Black Edition</p>
-												<a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div><!--/category-tab-->
-
+						{% endfor %}
 					<div class="recommended_items" style="width: 100%;"><!--recommended_items-->
 						<h2 class="title text-center">recommended items</h2>
 						<div id="recommended-item-carousel" class="carousel slide" data-ride="carousel">
@@ -400,24 +174,24 @@
 								{% if forloop.counter0|divisibleby:3 and forloop.counter0 != 0 %}
 								{% comment %} this div closes the div placed under with class item {% endcomment %}
 							</div>
+							{% endif %}
+							{% if forloop.counter0|divisibleby:3 %}
+							<div class="item {% if forloop.first %}active{% endif %}">
 								{% endif %}
-								{% if forloop.counter0|divisibleby:3 %}
-								<div class="item {% if forloop.first %}active{% endif %}">
-									{% endif %}
-									<div class="col-sm-4">
-										<div class="product-image-wrapper">
-											<div class="single-products">
-												<div class="productinfo text-center">
-													<img src="{{ i.img.url }}" alt="" />
-													<h2>${{ i.price }}</h2>
-													<p>{{ i.name }}</p>
-													<a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
-												</div>
+								<div class="col-sm-4">
+									<div class="product-image-wrapper">
+										<div class="single-products">
+											<div class="productinfo text-center">
+												<img src="{{ i.img.url }}" alt="" />
+												<h2>${{ i.price }}</h2>
+												<p>{{ i.name }}</p>
+												<a class="btn btn-default add-to-cart" productid = {{ i.id }}><i class="fa fa-shopping-cart"></i>Add to cart</a>
 											</div>
 										</div>
 									</div>
-									{% endfor %}
 								</div>
+								{% endfor %}
+							</div>
 						</div>
 						<a class="left recommended-item-control" href="#recommended-item-carousel" data-slide="prev">
 						<i class="fa fa-angle-left"></i>
@@ -426,12 +200,32 @@
 						<i class="fa fa-angle-right"></i>
 						</a>			
 					</div>
-				</div>
+				<!-- </div> -->
 			</div>
 		</div>
 	</section>
 
 	<script>
+		add_to_cart = document.getElementsByClassName('add-to-cart')
+		for(let i of add_to_cart){
+			i.onclick = function(){
+				$.ajax({
+					type: "GET",
+					url: '{% url "home" %}',
+					data: {productid: i.getAttribute('productid')},
+					dataType: 'int',
+					success: function (data) {
+							console.log('Submission was successful.');
+							document.alarm('success')
+						},
+						error: function (data) {
+								console.log('An error occurred.');
+							},
+						})
+					}
+					}
+						
+
 		mydiv = document.getElementById("mydiv")
 		mydiv.onclick = function(click) {
 			var range = document.getElementsByClassName('tooltip-inner')
