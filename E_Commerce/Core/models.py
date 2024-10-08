@@ -1,7 +1,5 @@
 from django.db import models
 from phonenumber_field.modelfields import PhoneNumberField
-from django.contrib.auth.models import AbstractUser
-from random import randrange
 
 class Contact(models.Model):
     phone = PhoneNumberField('phone')
@@ -55,10 +53,10 @@ class Category(models.Model):
         return self.name
 
 class Product(models.Model):
-    name = models.CharField(max_length=255, default=f'Easy Polo Black Edition {randrange(99)}')
-    price = models.IntegerField("price", default=randrange(30))
+    name = models.CharField(max_length=255, default='Easy Polo Black Edition 1')
+    price = models.IntegerField("price", default=20)
     brand = models.ForeignKey(Brands, on_delete=models.CASCADE, related_name='brand', blank=True, null=True)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='Product_category')
     img = models.ImageField()
     def __str__(self) -> str:
         return self.name
@@ -67,6 +65,3 @@ class Circle(models.Model):
     name = models.CharField(max_length=255)
     date = models.DateField(auto_now_add=True)
     img = models.ImageField()
-
-class CustomUser(AbstractUser):
-    products = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='user_products', null=True)

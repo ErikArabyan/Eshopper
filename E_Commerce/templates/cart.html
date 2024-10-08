@@ -5,7 +5,7 @@
 		<div class="container">
 			<div class="breadcrumbs">
 				<ol class="breadcrumb">
-				  <li><a href="#">Home</a></li>
+				  <li><a href="{% url 'home' %}">Home</a></li>
 				  <li class="active">Shopping Cart</li>
 				</ol>
 			</div>
@@ -22,82 +22,32 @@
 						</tr>
 					</thead>
 					<tbody>
+						{% for i in user.userproduct_set.all %}
 						<tr>
 							<td class="cart_product">
-								<a href=""><img src="images/cart/one.png" alt=""></a>
+								<img src="{{ i.product.img.url }}" alt="" style="width: 20%;">
 							</td>
 							<td class="cart_description">
-								<h4><a href="">Colorblock Scuba</a></h4>
-								<p>Web ID: 1089772</p>
+								<h4>{{ i.product.name }}</h4>
 							</td>
 							<td class="cart_price">
-								<p>$59</p>
+								<p>${{ i.product.price }}</p>
 							</td>
 							<td class="cart_quantity">
 								<div class="cart_quantity_button">
-									<a class="cart_quantity_up" href=""> + </a>
-									<input class="cart_quantity_input" type="text" name="quantity" value="1" autocomplete="off" size="2">
-									<a class="cart_quantity_down" href=""> - </a>
+									<a class="cart_quantity_down" product="{{i.id}}"> - </a>
+									<input class="cart_quantity_input" type="text" name="quantity" value="{{ i.count }}" autocomplete="off" size="2">
+									<a class="cart_quantity_up" product="{{i.id}}"> + </a>
 								</div>
 							</td>
 							<td class="cart_total">
-								<p class="cart_total_price">$59</p>
+								<p class="cart_total_price">${% widthratio i.product.price 1 i.count %}</p>
 							</td>
 							<td class="cart_delete">
-								<a class="cart_quantity_delete" href=""><i class="fa fa-times"></i></a>
+								<a class="cart_quantity_delete"><i class="fa fa-times"></i></a>
 							</td>
 						</tr>
-
-						<tr>
-							<td class="cart_product">
-								<a href=""><img src="images/cart/two.png" alt=""></a>
-							</td>
-							<td class="cart_description">
-								<h4><a href="">Colorblock Scuba</a></h4>
-								<p>Web ID: 1089772</p>
-							</td>
-							<td class="cart_price">
-								<p>$59</p>
-							</td>
-							<td class="cart_quantity">
-								<div class="cart_quantity_button">
-									<a class="cart_quantity_up" href=""> + </a>
-									<input class="cart_quantity_input" type="text" name="quantity" value="1" autocomplete="off" size="2">
-									<a class="cart_quantity_down" href=""> - </a>
-								</div>
-							</td>
-							<td class="cart_total">
-								<p class="cart_total_price">$59</p>
-							</td>
-							<td class="cart_delete">
-								<a class="cart_quantity_delete" href=""><i class="fa fa-times"></i></a>
-							</td>
-						</tr>
-						<tr>
-							<td class="cart_product">
-								<a href=""><img src="images/cart/three.png" alt=""></a>
-							</td>
-							<td class="cart_description">
-								<h4><a href="">Colorblock Scuba</a></h4>
-								<p>Web ID: 1089772</p>
-							</td>
-							<td class="cart_price">
-								<p>$59</p>
-							</td>
-							<td class="cart_quantity">
-								<div class="cart_quantity_button">
-									<a class="cart_quantity_up" href=""> + </a>
-									<input class="cart_quantity_input" type="text" name="quantity" value="1" autocomplete="off" size="2">
-									<a class="cart_quantity_down" href=""> - </a>
-								</div>
-							</td>
-							<td class="cart_total">
-								<p class="cart_total_price">$59</p>
-							</td>
-							<td class="cart_delete">
-								<a class="cart_quantity_delete" href=""><i class="fa fa-times"></i></a>
-							</td>
-						</tr>
+						{% endfor %}
 					</tbody>
 				</table>
 			</div>
@@ -168,10 +118,8 @@
 				<div class="col-sm-6">
 					<div class="total_area">
 						<ul>
-							<li>Cart Sub Total <span>$59</span></li>
-							<li>Eco Tax <span>$2</span></li>
 							<li>Shipping Cost <span>Free</span></li>
-							<li>Total <span>$61</span></li>
+							<li>Total <span id="changetotal">$61</span></li>
 						</ul>
 							<a class="btn btn-default update" href="">Update</a>
 							<a class="btn btn-default check_out" href="">Check Out</a>
@@ -180,4 +128,39 @@
 			</div>
 		</div>
 	</section><!--/#do_action-->
+	<script>
+		x = document.getElementsByClassName('cart_total_price')
+		let total = 0
+		for (let i = 0; i < x.length; i++) {
+			let y = x[i].innerText.substr(1)
+			total += (+y)
+		}
+		document.getElementById(id="changetotal").innerText = '$'+total
+
+
+		document.getElementsByTagName('tbody')[0].onclick = function changeQuantity(click) {
+			console.log(click.srcElement);
+			
+		// $.ajax({
+		// 	type: "GET",
+		// 	url: '{% url "cart" %}',
+		// 	data: {productid: i.getAttribute('productid')},
+		// 	dataType: 'text',
+		// 	success: function(response) {
+		// 		jsonrespone = JSON.parse(response)
+		// 		console.log(jsonrespone);
+		// 		if (jsonrespone.status == 'success'){
+		// 			window.alert('the product has been added to your cart')
+		// 		}
+		// 		else if (jsonrespone.status === 'redirect') {
+		// 			console.log(1)
+		// 			window.location.href = jsonrespone.url
+		// 		}
+		// 		},
+		// 		error: function(data) {
+		// 				console.log('An error occurred.');
+		// 			}
+		// })
+	}
+	</script>
 {% endblock %}

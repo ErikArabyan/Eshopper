@@ -100,58 +100,55 @@
 								</div>
 							</div><!--/price-range-->
 						</form>
-
 						<div class="shipping text-center"><!--shipping-->
 							<img src="{% static 'images/home/shipping.jpg' %}" alt="" />
 						</div><!--/shipping-->
-					
 					</div>
 				</div>
-					<form method="post">
-						{% csrf_token %}
-						<div class="col-sm-9 padding-right" style="display: flex; flex-direction: column; align-items: center;">
-							<input type="text" placeholder="Search" name="query" style="background: #F0F0E9; border: none; color: #B2B2B2; font-family: 'roboto'; font-size: 12px; font-weight: 300; height: 35px; outline: none; padding-left: 10px; width: 60%;"/><br>
-					</form>
-					<div class="features_items" id="for_price_range" style="width: 100%;"><!--features_items-->
-						<h2 class="title text-center">Features Items</h2>
-						{% for i in products|slice:":6" %}
-						<div class="col-sm-4" >
-							<div class="product-image-wrapper">
-								<div class="single-products">
-									<div class="productinfo text-center">
-										<img src="{{ i.img.url }}" alt="" />
-										<h2>${{ i.price }}</h2>
-										<p>{{ i.name }}</p>
-										<a class="btn btn-default add-to-cart" productid = {{ i.id }}><i class="fa fa-shopping-cart"></i>Add to cart</a>
-									</div>
-								</div>
-								<div class="choose">
-									<ul class="nav nav-pills nav-justified">
-										<li><a href="#"><i class="fa fa-plus-square"></i>Add to wishlist</a></li>
-										<li><a href="#"><i class="fa fa-plus-square"></i>Add to compare</a></li>
-									</ul>
+				<form method="post">
+					{% csrf_token %}
+					<div class="col-sm-9 padding-right" style="display: flex; flex-direction: column; align-items: center;">
+						<input type="text" placeholder="Search" name="query" style="background: #F0F0E9; border: none; color: #B2B2B2; font-family: 'roboto'; font-size: 12px; font-weight: 300; height: 35px; outline: none; padding-left: 10px; width: 60%;"/><br>
+				</form>
+				<div class="features_items" id="for_price_range" style="width: 100%;"><!--features_items-->
+					<h2 class="title text-center">Features Items</h2>
+					{% for i in products|slice:":6" %}
+					<div class="col-sm-4" >
+						<div class="product-image-wrapper">
+							<div class="single-products">
+								<div class="productinfo text-center">
+									<img src="{{ i.img.url }}" alt="" />
+									<h2>${{ i.price }}</h2>
+									<p>{{ i.name }}</p>
+									<a class="btn btn-default add-to-cart" productid = {{ i.id }}><i class="fa fa-shopping-cart"></i>Add to cart</a>
 								</div>
 							</div>
+							<div class="choose">
+								<ul class="nav nav-pills nav-justified">
+									<li><a href="#"><i class="fa fa-plus-square"></i>Add to wishlist</a></li>
+									<li><a href="#"><i class="fa fa-plus-square"></i>Add to compare</a></li>
+								</ul>
+							</div>
 						</div>
-						{% endfor %}
-					</div><!--features_items-->
-					
-		<div class="category-tab"><!--category-tab-->
-			<div class="col-sm-12">
-				<ul class="nav nav-tabs">
-					{% for i in category %}
-					<li {% if forloop.first %}class="active"{% endif %}><a href="#{{ i.name }}" data-toggle="tab">{{ i.name }}</a></li>
+					</div>
 					{% endfor %}
-				</ul>
-				</div>
+				</div><!--features_items-->
+				
+				<div class="category-tab" style="width: 100%"><!--category-tab-->
+					<div class="col-sm-12">
+						<ul class="nav nav-tabs">
+							{% for i in category %}
+							{% if i.Product_category.exists %}
+							<li {% if forloop.first %}class="active"{% endif %}><a href="#{{ i.id }}_{{ i.name }}" data-toggle="tab">{{ i.name }}</a></li>
+							{% endif %}
+							{% endfor %}
+						</ul>
+					</div>
 					<div class="tab-content">
-						{% for j in products %}
-						{% ifchanged j.category %}
-						{% if not forloop.first %}
-						</div>
-						{% endif %}
-						<div class="tab-pane fade active in" id="{{ j.category }}">
-						{% endifchanged %} 
+						{% for i in category %}
+						{% if i.Product_category.exists %}
+						<div class="tab-pane fade {% if forloop.first %}active in{% endif %}" id="{{ i.id }}_{{ i.name }}">
+							{% for j in i.Product_category.all %}
 							<div class="col-sm-3">
 								<div class="product-image-wrapper">
 									<div class="single-products">
@@ -164,43 +161,48 @@
 									</div>
 								</div>
 							</div>
+							{% endfor %}
+						</div>
+						{% endif %}
 						{% endfor %}
-					<div class="recommended_items" style="width: 100%;"><!--recommended_items-->
-						<h2 class="title text-center">recommended items</h2>
-						<div id="recommended-item-carousel" class="carousel slide" data-ride="carousel">
-							<div class="carousel-inner">
-								{% for i in products %}
-								<!-- <h1>{{ i.img.url }}</h1> -->
-								{% if forloop.counter0|divisibleby:3 and forloop.counter0 != 0 %}
-								{% comment %} this div closes the div placed under with class item {% endcomment %}
-							</div>
+					</div>
+				</div>
+				
+				<div class="recommended_items" style="width: 100%;"><!--recommended_items-->
+					<h2 class="title text-center">recommended items</h2>
+					<div id="recommended-item-carousel" class="carousel slide" data-ride="carousel">
+						<div class="carousel-inner">
+							{% for i in products %}
+							<!-- <h1>{{ i.img.url }}</h1> -->
+							{% if forloop.counter0|divisibleby:3 and forloop.counter0 != 0 %}
+							{% comment %} this div closes the div placed under with class item {% endcomment %}
+						</div>
+						{% endif %}
+						{% if forloop.counter0|divisibleby:3 %}
+						<div class="item {% if forloop.first %}active{% endif %}">
 							{% endif %}
-							{% if forloop.counter0|divisibleby:3 %}
-							<div class="item {% if forloop.first %}active{% endif %}">
-								{% endif %}
-								<div class="col-sm-4">
-									<div class="product-image-wrapper">
-										<div class="single-products">
-											<div class="productinfo text-center">
-												<img src="{{ i.img.url }}" alt="" />
-												<h2>${{ i.price }}</h2>
-												<p>{{ i.name }}</p>
-												<a class="btn btn-default add-to-cart" productid = {{ i.id }}><i class="fa fa-shopping-cart"></i>Add to cart</a>
-											</div>
+							<div class="col-sm-4">
+								<div class="product-image-wrapper">
+									<div class="single-products">
+										<div class="productinfo text-center">
+											<img src="{{ i.img.url }}" alt="" />
+											<h2>${{ i.price }}</h2>
+											<p>{{ i.name }}</p>
+											<a class="btn btn-default add-to-cart" productid = {{ i.id }}><i class="fa fa-shopping-cart"></i>Add to cart</a>
 										</div>
 									</div>
 								</div>
-								{% endfor %}
 							</div>
+							{% endfor %}
 						</div>
-						<a class="left recommended-item-control" href="#recommended-item-carousel" data-slide="prev">
-						<i class="fa fa-angle-left"></i>
-						</a>
-						<a class="right recommended-item-control" href="#recommended-item-carousel" data-slide="next">
-						<i class="fa fa-angle-right"></i>
-						</a>			
 					</div>
-				<!-- </div> -->
+					<a class="left recommended-item-control" href="#recommended-item-carousel" data-slide="prev">
+					<i class="fa fa-angle-left"></i>
+					</a>
+					<a class="right recommended-item-control" href="#recommended-item-carousel" data-slide="next">
+					<i class="fa fa-angle-right"></i>
+					</a>			
+				</div>
 			</div>
 		</div>
 	</section>
@@ -213,17 +215,24 @@
 					type: "GET",
 					url: '{% url "home" %}',
 					data: {productid: i.getAttribute('productid')},
-					dataType: 'int',
-					success: function (data) {
-							console.log('Submission was successful.');
-							document.alarm('success')
+					dataType: 'text',
+					success: function(response) {
+						jsonrespone = JSON.parse(response)
+						console.log(jsonrespone);
+						if (jsonrespone.status == 'success'){
+							window.alert('the product has been added to your cart')
+						}
+						else if (jsonrespone.status === 'redirect') {
+							console.log(1)
+							window.location.href = jsonrespone.url
+						}
 						},
-						error: function (data) {
+						error: function(data) {
 								console.log('An error occurred.');
-							},
+							}
 						})
 					}
-					}
+				}
 						
 
 		mydiv = document.getElementById("mydiv")
@@ -246,9 +255,7 @@
 					addelement.innerHTML = `
 						<!--features_items-->
 						<h2 class="title text-center">Features Items</h2>
-						`
-						console.log(data[0]);
-						
+						`						
 					for (let i = 0; i < data.length; i++) {
 						addelement.innerHTML += `
 						<div class="col-sm-4" >
@@ -279,7 +286,6 @@
 						`
 					}
 					let before = document.getElementById('add_feature_before')
-					console.log(before);
 					before.before(addelement)
 			 	}
 			});
