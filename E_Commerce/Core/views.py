@@ -27,6 +27,7 @@ class HomeListView(ListView):
         if request.headers.get('x-requested-with') == 'XMLHttpRequest' and 'productid' in request.GET:
             if request.user.is_authenticated:
                 user = CustomUser.objects.get(id=request.user.id)
+                print(int(request.GET.get('productid')),'-----------------')
                 product = int(request.GET.get('productid'))
                 try:
                     user_product = UserProduct.objects.get(user=user, product=product)
@@ -63,4 +64,11 @@ class CartListView(ListView):
     def get(self, request):
         context = self.get_context_data()
         context['user'] = CustomUser.objects.get(id=request.user.id)
+        if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+            user = CustomUser.objects.get(id=int(request.user.id))
+            product = int(request.GET.get('prod_id'))
+            user_product = UserProduct.objects.get(user=user, product=product)
+            user_product.count = request.GET.get('prod_count')
+            user_product.save()
+            return JsonResponse({'id': user_product.product_id})
         return render(request, self.template_name, context)
