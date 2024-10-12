@@ -10,13 +10,16 @@
 						<form method="post">
 							{% csrf_token %}
 							{% for f in log_form %}
-							{{f.label}}: {{ f }}
+							{{f.label}} {{ f }}
 							{{ f.errors }}
 							{% endfor %}
-							<span>
-								<input type="checkbox" class="checkbox"> 
-								Keep me signed in
-							</span>
+							<div style=" display: flex; justify-content: space-between;">
+								<span>
+									<input type="checkbox" class="checkbox" name='remember_me'> 
+									Keep me signed in
+								</span>
+								<a href="{% url 'AuthenticationUrls:password_reset' %}">Forgot Password?</a>
+							</div>
 							<button type="submit" class="btn btn-default" name='login'>Login</button>
 						</form>
 					</div><!--/login form-->
@@ -30,7 +33,7 @@
 						<form method="post">
 							{% csrf_token %}
 							{% for f in reg_form %}
-							{{f.label}}: {{ f }}
+							{{f.label}} {{ f }}
 							{{ f.errors }}
 							{% endfor %}
 							<button type="submit" class="btn btn-default" name="register">Signup</button>

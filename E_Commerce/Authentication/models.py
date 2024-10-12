@@ -1,10 +1,17 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.utils.translation import gettext_lazy as _
+from django.contrib.auth.validators import UnicodeUsernameValidator
 from Core.models import *
 
 
 class CustomUser(AbstractUser):
     products = models.ManyToManyField(Product, related_name='user_products', through='UserProduct')
+    username = models.CharField(_("username"), max_length=150, unique=False, help_text=_("Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only." ))
+    email = models.EmailField(_("email address"), blank=False, unique=True)
+    EMAIL_FIELD = "email"
+    USERNAME_FIELD = "email"
+    REQUIRED_FIELDS = ["username"]
 
 class UserProduct(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
