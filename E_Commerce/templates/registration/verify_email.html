@@ -1,5 +1,0 @@
-{% autoescape off %}
-Hi {{ user.username }},
-Please follow the link to complete your registration.
-http://{{ domain }}{% url 'AuthenticationUrls:verify_email' uidb64=uid token=token %}
-{% endautoescape %}

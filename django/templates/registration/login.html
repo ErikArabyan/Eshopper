@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block content %}
+	<section id="form"><!--form-->
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-4 col-sm-offset-1">
+					<div class="login-form"><!--login form-->
+						<h2>Login to your account</h2>
+						<form method="post">
+							{% csrf_token %}
+							{% for f in log_form %}
+							{{f.label}} {{ f }}
+							{{ f.errors }}
+							{% endfor %}
+							<div style=" display: flex; justify-content: space-between;">
+								<span>
+									<input type="checkbox" class="checkbox" name='remember_me'> 
+									Keep me signed in
+								</span>
+								<a href="{% url 'AuthenticationUrls:password_reset' %}">Forgot Password?</a>
+							</div>
+							<button type="submit" class="btn btn-default" name='login'>Login</button>
+						</form>
+					</div><!--/login form-->
+				</div>
+				<div class="col-sm-1">
+					<h2 class="or">OR</h2>
+				</div>
+				<div class="col-sm-4">
+					<div class="signup-form"><!--sign up form-->
+						<h2>New User Signup!</h2>
+						<form method="post">
+							{% csrf_token %}
+							{% for f in reg_form %}
+							{{f.label}} {{ f }}
+							{{ f.errors }}
+							{% endfor %}
+							<button type="submit" class="btn btn-default" name="register">Signup</button>
+							<!-- <input type="text" placeholder="Name"/>
+							<input type="email" placeholder="Email Address"/>
+							<input type="password" placeholder="Password"/> -->
+						</form>
+					</div><!--/sign up form-->
+				</div>
+			</div>
+		</div>
+	</section><!--/form-->
+	
+{% endblock content %}
